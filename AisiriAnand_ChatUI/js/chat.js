@@ -18,18 +18,13 @@ $(document).ready(function() {
     let isFirstMessage = true;
     let isTyping = false;
     
-    // Mock AI Responses
+    // AI Responses
     const aiResponses = [
-        "I'd be happy to help you with that! Let me think through this step by step.",
-        "That's a great question! Here's what I can tell you about it...",
-        "I understand what you're looking for. Let me provide you with some guidance.",
-        "Based on what you've shared, I think the best approach would be...",
-        "That's an interesting problem! Let me break it down for you.",
-        "I can definitely assist with that. Here's my recommendation...",
-        "Thanks for asking! Here's how you can tackle this challenge...",
-        "Great question! Let me explain this concept clearly for you.",
-        "I see what you mean. Here's a solution that should work well...",
-        "Absolutely! Let me walk you through the process step by step."
+        "I'd be happy to help you with that! Let me think through this.",
+        "That's a great question! Here's what I can tell you.",
+        "I understand what you need. Let me provide some guidance.",
+        "Thanks for asking! I'll help you with this request.",
+        "Interesting question! Here's my response to help you."
     ];
     
     // Initialize
@@ -112,16 +107,16 @@ $(document).ready(function() {
         }, 1500 + Math.random() * 1000); // 1.5-2.5 seconds delay
     }
     
-    // Add Message to Chat
+    // Add Message to Chat with Enhanced Animation
     function addMessage(text, sender) {
         const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const senderName = sender === 'user' ? 'You' : 'AI Assistant';
-        const senderIcon = sender === 'user' ? 'fa-user' : 'fa-robot';
+        const senderAvatar = sender === 'user' ? '<i class="fas fa-user"></i>' : '🏏';
         
-        const messageHTML = `
+        const $message = $(`
             <div class="message ${sender}">
-                <div class="message-avatar">
-                    <i class="fas ${senderIcon}"></i>
+                <div class="message-avatar ${sender}-avatar">
+                    ${senderAvatar}
                 </div>
                 <div class="message-content">
                     <div class="message-header">
@@ -133,10 +128,44 @@ $(document).ready(function() {
                     </div>
                 </div>
             </div>
-        `;
+        `);
         
-        $messagesArea.append(messageHTML);
+        $messagesArea.append($message);
+        
+        // Add sparkle effect for AI messages
+        if (sender === 'ai') {
+            addSparkleEffect($message);
+        }
+        
         scrollToBottom();
+    }
+    
+    // Add Sparkle Effect to Message
+    function addSparkleEffect($element) {
+        const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#10b981'];
+        
+        for (let i = 0; i < 5; i++) {
+            const $sparkle = $('<div class="sparkle"></div>');
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const left = Math.random() * 100;
+            const top = Math.random() * 100;
+            
+            $sparkle.css({
+                position: 'absolute',
+                width: '8px',
+                height: '8px',
+                background: color,
+                borderRadius: '50%',
+                left: left + '%',
+                top: top + '%',
+                pointerEvents: 'none',
+                animation: 'sparkle 1s ease-out forwards'
+            });
+            
+            $element.css('position', 'relative').append($sparkle);
+            
+            setTimeout(() => $sparkle.remove(), 1000);
+        }
     }
     
     // Show Typing Indicator
